@@ -1,0 +1,6 @@
+.DS_Store
+.idea/
+book/
+*tmp.go
+TODO
+demo
