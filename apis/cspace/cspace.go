@@ -175,27 +175,19 @@ func UploadSingle(ctx *dingding.App, media string, params url.Values) (resp []by
 			return
 		}
 
-		// field
-		err = m.WriteField("agent_id", params.Get("agent_id"))
-		if err != nil {
-			return
-		}
-
-		err = m.WriteField("file_size", params.Get("file_size"))
-		if err != nil {
-			return
-		}
-
 	}()
 
-	return ctx.Client.HTTPPost(apiUploadSingle, r, m.FormDataContentType())
+	return ctx.Client.HTTPPost(apiUploadSingle+"?"+params.Encode(), r, m.FormDataContentType())
 
 }
 
 /*
 开启/提交文件上传事务
 
+开启分块上传事务
+文件分块上传第一步，开启上传事务，该接口返回upload_id，钉盘服务器以upload_id唯一标识一个上传任务。分块最小需大于100KB，最大不超过8M，最多支持10000块。
 
+注意：浏览器可能会转义某些字符导致请求失败，调试时请使用curl或者代码模拟请求。
 
 See: https://ding-doc.dingtalk.com/doc#/serverapi2/wk3krc
 
@@ -235,24 +227,8 @@ func UploadChunk(ctx *dingding.App, media string, params url.Values) (resp []byt
 			return
 		}
 
-		// field
-		err = m.WriteField("agent_id", params.Get("agent_id"))
-		if err != nil {
-			return
-		}
-
-		err = m.WriteField("upload_id", params.Get("upload_id"))
-		if err != nil {
-			return
-		}
-
-		err = m.WriteField("chunk_sequence", params.Get("chunk_sequence"))
-		if err != nil {
-			return
-		}
-
 	}()
 
-	return ctx.Client.HTTPPost(apiUploadChunk, r, m.FormDataContentType())
+	return ctx.Client.HTTPPost(apiUploadChunk+"?"+params.Encode(), r, m.FormDataContentType())
 
 }

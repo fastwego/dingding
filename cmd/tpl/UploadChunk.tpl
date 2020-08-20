@@ -20,24 +20,8 @@ func UploadChunk(ctx *dingding.App, media string, params url.Values) (resp []byt
 			return
 		}
 
-		// field
-		err = m.WriteField("agent_id", params.Get("agent_id"))
-		if err != nil {
-			return
-		}
-
-		err = m.WriteField("upload_id", params.Get("upload_id"))
-        if err != nil {
-            return
-        }
-
-        err = m.WriteField("chunk_sequence", params.Get("chunk_sequence"))
-        if err != nil {
-            return
-        }
-
 	}()
 
-    return ctx.Client.HTTPPost(apiUploadChunk, r,  m.FormDataContentType())
+    return ctx.Client.HTTPPost(apiUploadChunk+"?"+params.Encode(), r, m.FormDataContentType())
     
 }

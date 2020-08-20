@@ -78,7 +78,7 @@ func (app *App) GetAccessToken() (accessToken string, err error) {
 }
 
 /*
-从服务器获取新的 TenantAccessToken
+从服务器获取新的 AccessToken
 
 See: https://open.dingding.cn/document/ukTMukTMukTM/uIjNz4iM2MjLyYzM
 */

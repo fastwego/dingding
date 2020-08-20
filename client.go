@@ -22,8 +22,10 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"strings"
+	"net/url"
 )
+
+var UserAgent = "[fastwego/dingding] A fast dingding development sdk written in Golang"
 
 /*
 钉钉 api 服务器地址
@@ -43,10 +45,18 @@ func (client *Client) HTTPGet(uri string) (resp []byte, err error) {
 	if err != nil {
 		return
 	}
+
+	uri = DingdingServerUrl + uri
 	if client.Ctx.Logger != nil {
-		client.Ctx.Logger.Printf("GET %s", DingdingServerUrl+uri)
+		client.Ctx.Logger.Printf("GET %s", uri)
 	}
-	response, err := http.Get(DingdingServerUrl + uri)
+	req, err := http.NewRequest(http.MethodGet, uri, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("User-Agent", UserAgent)
+	response, err := http.DefaultClient.Do(req)
+
 	if err != nil {
 		return
 	}
@@ -60,10 +70,18 @@ func (client *Client) HTTPPost(uri string, payload io.Reader, contentType string
 	if err != nil {
 		return
 	}
+	uri = DingdingServerUrl + uri
 	if client.Ctx.Logger != nil {
-		client.Ctx.Logger.Printf("POST %s", DingdingServerUrl+uri)
+		client.Ctx.Logger.Printf("POST %s", uri)
 	}
-	response, err := http.Post(DingdingServerUrl+uri, contentType, payload)
+	req, err := http.NewRequest(http.MethodPost, uri, payload)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Add("User-Agent", UserAgent)
+	req.Header.Add("Content-Type", contentType)
+	response, err := http.DefaultClient.Do(req)
+
 	if err != nil {
 		return
 	}
@@ -79,10 +97,19 @@ func (client *Client) applyAccessToken(oldUrl string) (newUrl string, err error)
 	if err != nil {
 		return
 	}
-	if strings.Contains(oldUrl, "?") {
-		newUrl = oldUrl + "&access_token=" + accessToken
-	} else {
-		newUrl = oldUrl + "?access_token=" + accessToken
+
+	parse, err := url.Parse(oldUrl)
+	if err != nil {
+		return
+	}
+
+	newUrl = parse.Host + parse.Path + "?access_token=" + accessToken
+	if len(parse.RawQuery) > 0 {
+		newUrl += "&" + parse.RawQuery
+	}
+
+	if len(parse.Fragment) > 0 {
+		newUrl += "#" + parse.Fragment
 	}
 	return
 }

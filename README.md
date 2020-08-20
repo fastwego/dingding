@@ -1,6 +1,6 @@
 # fastwego/dingding
 
-A fast dingding development sdk written in Golang
+A fast [dingding](https://ding-doc.dingtalk.com/) development sdk written in Golang
 
 [![GoDoc](https://pkg.go.dev/badge/github.com/fastwego/dingding?status.svg)](https://pkg.go.dev/github.com/fastwego/dingding?tab=doc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/fastwego/dingding)](https://goreportcard.com/report/github.com/fastwego/dingding)
@@ -13,8 +13,8 @@ go get github.com/fastwego/dingding
 ```go
 // 创建应用实例
 app := dingding.New(dingding.Config{
-    Appid:  "APPID",
-    Secret: "SECRET",
+    AppKey:         viper.GetString("AppKey"),
+    AppSecret:      viper.GetString("AppSecret"),
 })
 
 // 调用 api

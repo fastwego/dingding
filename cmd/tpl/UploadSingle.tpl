@@ -20,19 +20,8 @@ func UploadSingle(ctx *dingding.App, media string, params url.Values) (resp []by
 			return
 		}
 
-		// field
-		err = m.WriteField("agent_id", params.Get("agent_id"))
-		if err != nil {
-			return
-		}
-
-		err = m.WriteField("file_size", params.Get("file_size"))
-        if err != nil {
-            return
-        }
-
 	}()
 
-    return ctx.Client.HTTPPost(apiUploadSingle, r,  m.FormDataContentType())
+    return ctx.Client.HTTPPost(apiUploadSingle+"?"+params.Encode(), r, m.FormDataContentType())
     
 }

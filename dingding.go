@@ -15,7 +15,7 @@
 /*
 钉钉开发 SDK
 
-See: https://developers.weixin.qq.com/doc/dingding/Getting_Started/Overview.html
+See: https://ding-doc.dingtalk.com/
 */
 package dingding
 
@@ -75,7 +75,7 @@ func newApp(config AppConfig) (app *App) {
 	instance.Client = Client{Ctx: &instance}
 	instance.Server = Server{Ctx: &instance}
 
-	instance.Logger = log.New(os.Stdout, "[dingding] ", log.LstdFlags|log.Llongfile)
+	instance.Logger = log.New(os.Stdout, "[fastwego/dingding] ", log.LstdFlags|log.Llongfile)
 
 	return &instance
 }

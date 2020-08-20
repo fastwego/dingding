@@ -30,7 +30,6 @@ const (
 
 
 
-
 See: https://ding-doc.dingtalk.com/doc#/serverapi2/clotub
 
 GET https://oapi.dingtalk.com/user/getuserinfo?access_token=access_token&code=code

@@ -40,7 +40,7 @@ var apiConfig = []ApiGroup{
 		Package: `auth`,
 		Apis: []Api{
 			{
-				Name:        "获取用户userid\n",
+				Name:        "获取用户userid",
 				Description: "",
 				Request:     "GET https://oapi.dingtalk.com/user/getuserinfo?access_token=access_token&code=code",
 				See:         "https://ding-doc.dingtalk.com/doc#/serverapi2/clotub",
@@ -1293,11 +1293,14 @@ var apiConfig = []ApiGroup{
 				},
 			},
 			{
-				Name:        "开启/提交文件上传事务",
-				Description: "",
-				Request:     "GET https://oapi.dingtalk.com/file/upload/transaction?access_token=ACCESS_TOKENagent_id=AGENT_IDfile_size=FILE_SIZEchunk_numbers=CHUNK_NUMBERS",
-				See:         "https://ding-doc.dingtalk.com/doc#/serverapi2/wk3krc",
-				FuncName:    "Transaction",
+				Name: "开启/提交文件上传事务",
+				Description: `开启分块上传事务
+文件分块上传第一步，开启上传事务，该接口返回upload_id，钉盘服务器以upload_id唯一标识一个上传任务。分块最小需大于100KB，最大不超过8M，最多支持10000块。
+
+注意：浏览器可能会转义某些字符导致请求失败，调试时请使用curl或者代码模拟请求。`,
+				Request:  "GET https://oapi.dingtalk.com/file/upload/transaction?access_token=ACCESS_TOKENagent_id=AGENT_IDfile_size=FILE_SIZEchunk_numbers=CHUNK_NUMBERS",
+				See:      "https://ding-doc.dingtalk.com/doc#/serverapi2/wk3krc",
+				FuncName: "Transaction",
 				GetParams: []Param{
 					{Name: `agent_id`, Type: `string`},
 					{Name: `file_size`, Type: `string`},

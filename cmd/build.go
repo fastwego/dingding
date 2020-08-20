@@ -32,9 +32,9 @@ func main() {
 	flag.Parse()
 	for _, group := range apiConfig {
 
-		//if group.Package == pkgFlag {
-		build(group)
-		//}
+		if group.Package == pkgFlag {
+			build(group)
+		}
 	}
 
 	if pkgFlag == "apilist" {

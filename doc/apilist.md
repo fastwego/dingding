@@ -1,13 +1,7 @@
 - 身份验证(auth)
-	- [获取免登授权码](https://ding-doc.dingtalk.com/doc#/serverapi2/clotub) 
+	- [获取用户userid
+](https://ding-doc.dingtalk.com/doc#/serverapi2/clotub) 
 		- [GetUserInfo (/user/getuserinfo)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#GetUserInfo)
-	- [配置微应用管理后台地址](https://ding-doc.dingtalk.com/doc#/serverapi2/xswxhg) 
-		- [SSOGetToken (/sso/gettoken)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#SSOGetToken)
-	- [应用管理后台免登](https://ding-doc.dingtalk.com/doc#/serverapi2/xswxhg) 
-		- [SSOGetUserInfo (/sso/getuserinfo)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#SSOGetUserInfo)
-	- [服务端通过临时授权码获取授权用户的个人信息
-](https://ding-doc.dingtalk.com/doc#/serverapi2/kymkv6) 
-		- [GetUserInfoBycode (/sns/getuserinfo_bycode)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#GetUserInfoBycode)
 - 通讯录管理(contact)
 	- [获取通讯录权限范围](https://ding-doc.dingtalk.com/doc#/serverapi2/vt6v7m) 
 		- [Scopes (/auth/scopes)](https://pkg.go.dev/github.com/fastwego/dingding/apis/contact?tab=doc#Scopes)
