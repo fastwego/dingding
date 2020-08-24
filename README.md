@@ -79,3 +79,5 @@ FastWeGo 是一套丰富的 Go 开发框架，钉钉、飞书、微信等服务�
 欢迎提交 pull request / issue / 文档，一起让钉钉开发更快更好！
 
 Faster we go together!
+
+[加入开发者交流群](https://github.com/fastwego/fastwego.dev#%E5%BC%80%E5%8F%91%E8%80%85%E4%BA%A4%E6%B5%81%E7%BE%A4)
