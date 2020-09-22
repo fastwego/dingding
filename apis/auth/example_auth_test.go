@@ -26,6 +26,7 @@ func ExampleGetUserInfo() {
 	var ctx *dingding.App
 
 	params := url.Values{}
+	params.Add("code", "YOUR_CODE")
 	resp, err := auth.GetUserInfo(ctx, params)
 
 	fmt.Println(resp, err)

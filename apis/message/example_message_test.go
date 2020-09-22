@@ -15,6 +15,7 @@
 package message_test
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/url"
 
@@ -25,7 +26,32 @@ import (
 func ExampleAsyncsendV2() {
 	var ctx *dingding.App
 
-	payload := []byte("{}")
+	type Msg struct {
+		Msgtype    string `json:"msgtype"`
+		ActionCard struct {
+			Title       string `json:"title"`
+			Markdown    string `json:"markdown"`
+			SingleTitle string `json:"single_title"`
+			SingleURL   string `json:"single_url"`
+		} `json:"action_card"`
+	}
+	msg := Msg{}
+	msg.Msgtype = "action_card"
+	msg.ActionCard.Title = "Title"
+	msg.ActionCard.Markdown = `# 今天晚上不见不散`
+	msg.ActionCard.SingleTitle = "马上看看"
+	msg.ActionCard.SingleURL = "https://fastwego.dev"
+
+	data := struct {
+		AgentId    string `json:"agent_id"`
+		UseridList string `json:"userid_list"`
+		Msg        Msg    `json:"msg"`
+	}{
+		AgentId:    "AGENT_ID",
+		UseridList: "USERID",
+	}
+	data.Msg = msg
+	payload, err := json.Marshal(data)
 	resp, err := message.AsyncsendV2(ctx, payload)
 
 	fmt.Println(resp, err)
