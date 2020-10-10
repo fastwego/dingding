@@ -1,7 +1,8 @@
 - 身份验证(auth)
-	- [获取用户userid
-](https://ding-doc.dingtalk.com/doc#/serverapi2/clotub) 
+	- [获取用户userid](https://ding-doc.dingtalk.com/doc#/serverapi2/clotub) 
 		- [GetUserInfo (/user/getuserinfo)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#GetUserInfo)
+	- [获取jsapi_ticket](https://ding-doc.dingtalk.com/doc#/dev/uwa7vs) 
+		- [GetJSApiTicket (/get_jsapi_ticket)](https://pkg.go.dev/github.com/fastwego/dingding/apis/auth?tab=doc#GetJSApiTicket)
 - 通讯录管理(contact)
 	- [获取通讯录权限范围](https://ding-doc.dingtalk.com/doc#/serverapi2/vt6v7m) 
 		- [Scopes (/auth/scopes)](https://pkg.go.dev/github.com/fastwego/dingding/apis/contact?tab=doc#Scopes)

@@ -26,8 +26,15 @@ func ExampleGetUserInfo() {
 	var ctx *dingding.App
 
 	params := url.Values{}
-	params.Add("code", "YOUR_CODE")
 	resp, err := auth.GetUserInfo(ctx, params)
+
+	fmt.Println(resp, err)
+}
+
+func ExampleGetJSApiTicket() {
+	var ctx *dingding.App
+
+	resp, err := auth.GetJSApiTicket(ctx)
 
 	fmt.Println(resp, err)
 }

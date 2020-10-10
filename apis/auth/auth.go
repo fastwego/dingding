@@ -22,7 +22,8 @@ import (
 )
 
 const (
-	apiGetUserInfo = "/user/getuserinfo"
+	apiGetUserInfo    = "/user/getuserinfo"
+	apiGetJSApiTicket = "/get_jsapi_ticket"
 )
 
 /*
@@ -36,4 +37,17 @@ GET https://oapi.dingtalk.com/user/getuserinfo?access_token=access_token&code=co
 */
 func GetUserInfo(ctx *dingding.App, params url.Values) (resp []byte, err error) {
 	return ctx.Client.HTTPGet(apiGetUserInfo + "?" + params.Encode())
+}
+
+/*
+获取jsapi_ticket
+
+
+
+See: https://ding-doc.dingtalk.com/doc#/dev/uwa7vs
+
+GET https://oapi.dingtalk.com/get_jsapi_ticket?access_token=ACCESS_TOKEN
+*/
+func GetJSApiTicket(ctx *dingding.App) (resp []byte, err error) {
+	return ctx.Client.HTTPGet(apiGetJSApiTicket)
 }

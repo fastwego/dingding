@@ -49,6 +49,13 @@ var apiConfig = []ApiGroup{
 					{Name: `code`, Type: `string`},
 				},
 			},
+			{
+				Name:        "获取jsapi_ticket",
+				Description: "",
+				Request:     "GET https://oapi.dingtalk.com/get_jsapi_ticket?access_token=ACCESS_TOKEN",
+				See:         "https://ding-doc.dingtalk.com/doc#/dev/uwa7vs",
+				FuncName:    "GetJSApiTicket",
+			},
 		},
 	},
 	{
