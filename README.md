@@ -12,14 +12,15 @@ go get github.com/fastwego/dingding
 ```
 ```go
 // 创建应用实例
-app := dingding.New(dingding.Config{
-    AppKey:         viper.GetString("AppKey"),
-    AppSecret:      viper.GetString("AppSecret"),
+app := dingding.NewApp(dingding.AppConfig{
+    AppKey: viper.GetString("AppKey"),
+    AppSecret: viper.GetString("AppSecret"),
 })
 
 // 调用 api
-resp, err := microapp.List(App, []byte(``))
-fmt.Println(string(resp), err)
+params := url.Values{} 
+params.Add("code", CODE)
+resp, err := auth.GetUserInfo(app, params)
 ```
 
 完整的演示项目：
