@@ -16,8 +16,3 @@ jobs:
         uses: cedrickring/golang-action/go1.14@1.6.0
         env:
           GO111MODULE: "on"
-
-      - name: Use Go 1.13
-        uses: cedrickring/golang-action/go1.13@1.6.0
-        env:
-          GO111MODULE: "on"
