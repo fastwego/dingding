@@ -1,4 +1,4 @@
-// Copyright 2020 FastWeGo
+// Copyright 2021 FastWeGo
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,102 +15,96 @@
 package dingding
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
-var UserAgent = "[fastwego/dingding] A fast dingding development sdk written in Golang"
+const (
+	contentTypeApplicationJson = "application/json"
+)
+
+var (
+	ServerUrl       = "https://oapi.dingtalk.com"
+	UserAgent       = "fastwego/dingding"
+	errorSystemBusy = errors.New("system busy")
+)
+
+// NewClient
+func NewClient(AccessTokenManager AccessTokenManager) (client *Client) {
+	return &Client{
+		AccessTokenManager: AccessTokenManager,
+		HttpClient:         http.DefaultClient,
+	}
+}
 
 /*
-钉钉 api 服务器地址
-*/
-var DingdingServerUrl = "https://oapi.dingtalk.com"
-
-/*
-HttpClient 用于向接口发送请求
+Client 用于向接口发送请求
 */
 type Client struct {
-	Ctx *App
+	AccessTokenManager AccessTokenManager
+	HttpClient         *http.Client
 }
 
-// HTTPGet GET 请求
-func (client *Client) HTTPGet(uri string) (resp []byte, err error) {
-	uri, err = client.applyAccessToken(uri)
+// Do 执行 请求
+func (client *Client) Do(req *http.Request) (resp []byte, err error) {
+
+	// 添加 serverUrl
+	if !strings.HasPrefix(req.URL.String(), "http") {
+		parse, _ := url.Parse(ServerUrl)
+		req.URL.Host = parse.Host
+		req.URL.Scheme = parse.Scheme
+	}
+
+	// 默认 Header Content-Type
+	if req.Method == http.MethodPost && req.Header.Get("Content-Type") == "" {
+		req.Header.Set("Content-Type", contentTypeApplicationJson)
+	}
+
+	// 添加 access_token
+	accessToken, err := client.AccessTokenManager.GetAccessToken()
 	if err != nil {
 		return
 	}
+	q := req.URL.Query()
+	q.Set(client.AccessTokenManager.GetName(), accessToken)
+	req.URL.RawQuery = q.Encode()
 
-	uri = DingdingServerUrl + uri
-	if client.Ctx.Logger != nil {
-		client.Ctx.Logger.Printf("GET %s", uri)
-	}
-	req, err := http.NewRequest(http.MethodGet, uri, nil)
-	if err != nil {
-		return nil, err
-	}
+	// 添加 User-Agent
 	req.Header.Add("User-Agent", UserAgent)
-	response, err := http.DefaultClient.Do(req)
 
+	if Logger != nil {
+		Logger.Printf("%s %s %v", req.Method, req.URL.String(), req.Header)
+	}
+
+	response, err := client.HttpClient.Do(req)
 	if err != nil {
 		return
 	}
 	defer response.Body.Close()
-	return responseFilter(response)
-}
 
-//HTTPPost POST 请求
-func (client *Client) HTTPPost(uri string, payload io.Reader, contentType string) (resp []byte, err error) {
-	uri, err = client.applyAccessToken(uri)
-	if err != nil {
-		return
-	}
-	uri = DingdingServerUrl + uri
-	if client.Ctx.Logger != nil {
-		client.Ctx.Logger.Printf("POST %s", uri)
-	}
-	req, err := http.NewRequest(http.MethodPost, uri, payload)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Add("User-Agent", UserAgent)
-	req.Header.Add("Content-Type", contentType)
-	response, err := http.DefaultClient.Do(req)
+	resp, err = responseFilter(response)
 
-	if err != nil {
-		return
-	}
-	defer response.Body.Close()
-	return responseFilter(response)
-}
+	// -1 系统繁忙，此时请开发者稍候再试
+	// 重试一次
+	if err == errorSystemBusy {
 
-/*
-在请求地址上附加上 access_token
-*/
-func (client *Client) applyAccessToken(oldUrl string) (newUrl string, err error) {
-	accessToken, err := client.Ctx.AccessToken.GetAccessTokenHandler()
-	if err != nil {
-		return
+		if Logger != nil {
+			Logger.Printf("%v : retry %s %s Headers %v", errorSystemBusy, req.Method, req.URL.String(), req.Header)
+		}
+
+		response, err = client.HttpClient.Do(req)
+		if err != nil {
+			return
+		}
+
+		resp, err = responseFilter(response)
 	}
 
-	parse, err := url.Parse(oldUrl)
-	if err != nil {
-		return
-	}
-
-	newUrl = parse.Host + parse.Path + "?access_token=" + accessToken
-	if len(parse.RawQuery) > 0 {
-		newUrl += "&" + parse.RawQuery
-	}
-
-	if len(parse.Fragment) > 0 {
-		newUrl += "#" + parse.Fragment
-	}
 	return
 }
 
@@ -122,23 +116,32 @@ func (client *Client) applyAccessToken(oldUrl string) (newUrl string, err error)
 - 接口响应错误码 errcode 不为 0
 */
 func responseFilter(response *http.Response) (resp []byte, err error) {
+
 	if response.StatusCode != http.StatusOK {
-		err = fmt.Errorf("Status %s", response.Status)
+		err = fmt.Errorf("response.Status %s", response.Status)
 		return
 	}
+
+	//log.Println(response.Header)
 
 	resp, err = ioutil.ReadAll(response.Body)
 	if err != nil {
 		return
 	}
 
-	if bytes.HasPrefix(resp, []byte(`{`)) { // 只针对 json
+	if response.Header.Get("Content-Type") == "application/json" { // 只针对 json
 		errorResponse := struct {
 			Errcode int64  `json:"errcode"`
 			Errmsg  string `json:"errmsg"`
 		}{}
 		err = json.Unmarshal(resp, &errorResponse)
 		if err != nil {
+			return
+		}
+
+		//  -1	系统繁忙，此时请开发者稍候再试
+		if errorResponse.Errcode == -1 {
+			err = errorSystemBusy
 			return
 		}
 
