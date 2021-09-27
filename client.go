@@ -32,7 +32,7 @@ const (
 var ServerURL = "https://oapi.dingtalk.com"
 
 // UserAgent 发送请求是，使用的用户标识
-var UserAgent       = "fastwego/dingding"
+var UserAgent = "fastwego/dingding"
 
 var errorSystemBusy = errors.New("system busy")
 

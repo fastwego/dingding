@@ -37,8 +37,8 @@ type getRefreshRequestFunc func() *http.Request
 
 // DefaultAccessTokenManager 默认结构体
 type DefaultAccessTokenManager struct {
-	ID   string
-	Name string
+	ID                    string
+	Name                  string
 	GetRefreshRequestFunc getRefreshRequestFunc
 	Cache                 cachego.Cache
 }
