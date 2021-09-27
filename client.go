@@ -25,11 +25,11 @@ import (
 )
 
 const (
-	contentTypeApplicationJSON = "application/json"
+	contentTypeApplicationJson = "application/json"
 )
 
-// ServerURL DingDing api服务地址
-var ServerURL = "https://oapi.dingtalk.com"
+// ServerUrl DingDing api接口地址
+var ServerUrl = "https://oapi.dingtalk.com"
 
 // UserAgent 发送请求是，使用的用户标识
 var UserAgent = "fastwego/dingding"
@@ -40,14 +40,14 @@ var errorSystemBusy = errors.New("system busy")
 func NewClient(AccessTokenManager AccessTokenManager) (client *Client) {
 	return &Client{
 		AccessTokenManager: AccessTokenManager,
-		HTTPClient:         http.DefaultClient,
+		HttpClient:         http.DefaultClient,
 	}
 }
 
 // Client 用于向接口发送请求
 type Client struct {
 	AccessTokenManager AccessTokenManager
-	HTTPClient         *http.Client
+	HttpClient         *http.Client
 }
 
 // Do 执行 请求
@@ -55,14 +55,14 @@ func (client *Client) Do(req *http.Request) (resp []byte, err error) {
 
 	// 添加 serverUrl
 	if !strings.HasPrefix(req.URL.String(), "http") {
-		parse, _ := url.Parse(ServerURL)
+		parse, _ := url.Parse(ServerUrl)
 		req.URL.Host = parse.Host
 		req.URL.Scheme = parse.Scheme
 	}
 
 	// 默认 Header Content-Type
 	if req.Method == http.MethodPost && req.Header.Get("Content-Type") == "" {
-		req.Header.Set("Content-Type", contentTypeApplicationJSON)
+		req.Header.Set("Content-Type", contentTypeApplicationJson)
 	}
 
 	// 添加 access_token
@@ -81,7 +81,7 @@ func (client *Client) Do(req *http.Request) (resp []byte, err error) {
 		Logger.Printf("%s %s %v", req.Method, req.URL.String(), req.Header)
 	}
 
-	response, err := client.HTTPClient.Do(req)
+	response, err := client.HttpClient.Do(req)
 	if err != nil {
 		return
 	}
@@ -97,7 +97,7 @@ func (client *Client) Do(req *http.Request) (resp []byte, err error) {
 			Logger.Printf("%v : retry %s %s Headers %v", errorSystemBusy, req.Method, req.URL.String(), req.Header)
 		}
 
-		response, err = client.HTTPClient.Do(req)
+		response, err = client.HttpClient.Do(req)
 		if err != nil {
 			return
 		}

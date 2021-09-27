@@ -37,7 +37,7 @@ type getRefreshRequestFunc func() *http.Request
 
 // DefaultAccessTokenManager 默认结构体
 type DefaultAccessTokenManager struct {
-	ID                    string
+	Id                    string
 	Name                  string
 	GetRefreshRequestFunc getRefreshRequestFunc
 	Cache                 cachego.Cache
@@ -66,7 +66,7 @@ func (m *DefaultAccessTokenManager) GetAccessToken() (accessToken string, err er
 	req := m.GetRefreshRequestFunc()
 	// 添加 serverUrl
 	if !strings.HasPrefix(req.URL.String(), "http") {
-		parse, _ := url.Parse(ServerURL)
+		parse, _ := url.Parse(ServerUrl)
 		req.URL.Host = parse.Host
 		req.URL.Scheme = parse.Scheme
 	}
@@ -123,7 +123,7 @@ func (m *DefaultAccessTokenManager) GetAccessToken() (accessToken string, err er
 
 // getCacheKey
 func (m *DefaultAccessTokenManager) getCacheKey() (key string) {
-	return "access_token:" + m.ID
+	return "access_token:" + m.Id
 }
 
 // GetName 获取 access_token 参数名称
