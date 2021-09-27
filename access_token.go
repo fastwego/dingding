@@ -27,6 +27,7 @@ import (
 	"github.com/faabiosr/cachego"
 )
 
+// AccessTokenManager 令牌管理器
 type AccessTokenManager interface {
 	GetName() (name string)
 	GetAccessToken() (accessToken string, err error)
@@ -34,9 +35,10 @@ type AccessTokenManager interface {
 
 type getRefreshRequestFunc func() *http.Request
 
+// DefaultAccessTokenManager 默认结构体
 type DefaultAccessTokenManager struct {
-	Id                    string
-	Name                  string
+	ID   string
+	Name string
 	GetRefreshRequestFunc getRefreshRequestFunc
 	Cache                 cachego.Cache
 }
@@ -44,7 +46,7 @@ type DefaultAccessTokenManager struct {
 // 防止多个 goroutine 并发刷新冲突
 var getAccessTokenLock sync.Mutex
 
-// GetAccessToken
+// GetAccessToken 从缓存里面获取 access_token ，没有就重新请求
 func (m *DefaultAccessTokenManager) GetAccessToken() (accessToken string, err error) {
 
 	cacheKey := m.getCacheKey()
@@ -64,7 +66,7 @@ func (m *DefaultAccessTokenManager) GetAccessToken() (accessToken string, err er
 	req := m.GetRefreshRequestFunc()
 	// 添加 serverUrl
 	if !strings.HasPrefix(req.URL.String(), "http") {
-		parse, _ := url.Parse(ServerUrl)
+		parse, _ := url.Parse(ServerURL)
 		req.URL.Host = parse.Host
 		req.URL.Scheme = parse.Scheme
 	}
@@ -121,7 +123,7 @@ func (m *DefaultAccessTokenManager) GetAccessToken() (accessToken string, err er
 
 // getCacheKey
 func (m *DefaultAccessTokenManager) getCacheKey() (key string) {
-	return "access_token:" + m.Id
+	return "access_token:" + m.ID
 }
 
 // GetName 获取 access_token 参数名称

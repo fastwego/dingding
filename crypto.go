@@ -26,6 +26,7 @@ import (
 	"github.com/fastwego/dingding/util"
 )
 
+// Crypto 加密结构体
 type Crypto struct {
 	Token          string
 	EncodingAESKey string

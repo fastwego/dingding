@@ -14,13 +14,13 @@ go get github.com/fastwego/dingding
 
 // 钉钉 AccessToken 管理器
 atm := &dingding.DefaultAccessTokenManager{
-    Id:   DingConfig["AppKey"],
+    ID:   DingConfig["AppKey"],
     Name: "access_token",
     GetRefreshRequestFunc: func() *http.Request {
         params := url.Values{}
         params.Add("appkey", DingConfig["AppKey"])
         params.Add("appsecret", DingConfig["AppSecret"])
-        req, _ := http.NewRequest(http.MethodGet, dingding.ServerUrl+"/gettoken?"+params.Encode(), nil)
+        req, _ := http.NewRequest(http.MethodGet, dingding.ServerURL+"/gettoken?"+params.Encode(), nil)
 
         return req
     },
