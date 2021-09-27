@@ -28,13 +28,15 @@ const (
 	contentTypeApplicationJson = "application/json"
 )
 
-var (
-	ServerUrl       = "https://oapi.dingtalk.com"
-	UserAgent       = "fastwego/dingding"
-	errorSystemBusy = errors.New("system busy")
-)
+// ServerUrl DingDing api接口地址
+var ServerUrl = "https://oapi.dingtalk.com"
 
-// NewClient
+// UserAgent 发送请求是，使用的用户标识
+var UserAgent = "fastwego/dingding"
+
+var errorSystemBusy = errors.New("system busy")
+
+// NewClient 声明一个客户端
 func NewClient(AccessTokenManager AccessTokenManager) (client *Client) {
 	return &Client{
 		AccessTokenManager: AccessTokenManager,
@@ -42,9 +44,7 @@ func NewClient(AccessTokenManager AccessTokenManager) (client *Client) {
 	}
 }
 
-/*
-Client 用于向接口发送请求
-*/
+// Client 用于向接口发送请求
 type Client struct {
 	AccessTokenManager AccessTokenManager
 	HttpClient         *http.Client

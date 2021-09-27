@@ -12,11 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
-钉钉开发 SDK
+// 钉钉开发 SDK
+// See: https://ding-doc.dingtalk.com/
 
-See: https://ding-doc.dingtalk.com/
-*/
 package dingding
 
 import (
@@ -24,5 +22,5 @@ import (
 	"os"
 )
 
-// 日志记录器
+// Logger 日志记录器
 var Logger = log.New(os.Stdout, "[fastwego/dingding] ", log.LstdFlags|log.Llongfile)
